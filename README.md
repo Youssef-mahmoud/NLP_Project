@@ -10,13 +10,16 @@ The project investigates several NLP approaches, including local language models
 
 The game presents multiple-choice questions under a strict time limit. Our system connects to the game programmatically, retrieves or reasons over supporting evidence, selects one of the available answers, and logs the result for later evaluation.
 
-The project was developed in two main stages:
+The project was developed in three main stages:
 
 1. **Exploratory retrieval and solver experimentation**  
    Implemented mainly in `PoliMillionaire_Web_Retrieval.ipynb`.
 
 2. **Final modular competition pipeline**  
    Implemented in `Polymillionaire_Final.ipynb`, supporting both text and speech modes, experiment clustering, configuration comparison, and final competition execution.
+
+3. **Math competition further investigation**  
+   Implemented in `Math_Competition.ipynb`, focusing on reasoning-focused local models, timed thinking strategies, and calculator-assisted solving for math questions.
 
 ---
 
@@ -26,6 +29,7 @@ The project was developed in two main stages:
 .
 ├── PoliMillionaire_Web_Retrieval.ipynb   # Exploration notebook: API connection, retrieval benchmarking, LLM trials
 ├── Polymillionaire_Final.ipynb           # Final pipeline: text + speech modules, experiment configs, clusters, final runs
+├── Math_Competition.ipynb                # Math-specific investigation with timed reasoning and calculator-tool ablations
 ├── README.md                             # Project documentation
 └── millionaire_client/                   # Provided client package for interacting with the game API
 ```
@@ -201,6 +205,37 @@ The final notebook consolidates the lessons from the exploratory notebook into a
 
 ---
 
+## Notebook 3: `Math_Competition.ipynb`
+
+The math competition was investigated in a separate notebook because normal retrieval-augmented answering is often not the best fit for math questions. Many questions require calculation, symbolic manipulation, or multi-step reasoning rather than finding a factual statement online.
+
+### Main Features
+
+- Tests reasoning-focused local models:
+  - `deepseek-ai/DeepSeek-R1-Distill-Qwen-7B`,
+  - `Qwen/Qwen2.5-7B-Instruct`.
+- Uses timed thinking phases with soft and hard deadlines.
+- Adds forced final-answer extraction so the solver returns a valid option before the game deadline.
+- Compares DeepSeek timing strategies with and without soft-deadline wrap-up behavior.
+- Compares Qwen with and without a calculator-style math tool.
+- Uses a restricted Python/SymPy calculation namespace for tool-assisted math solving.
+- Produces per-game and summary CSV outputs for comparison.
+
+### Math Investigation Design
+
+The notebook separates solver behavior into reusable components:
+
+- question formatting,
+- answer parsing and cleanup,
+- model loading and timed generation,
+- Qwen calculator-tool execution,
+- DeepSeek tool-free reasoning,
+- solver configuration,
+- ablation execution,
+- result summarization.
+
+---
+
 ## Final Retrieval and Ranking Layer
 
 The final pipeline includes several retrieval filtering and reranking strategies:
@@ -309,7 +344,7 @@ Many retrieved documents were useful even when the exact answer string was not p
 
 ### Math Requires a Different Pipeline
 
-Math questions often require calculation or symbolic reasoning rather than web retrieval. For this reason, the math competition was separated and handled in a different experimental notebook.
+Math questions often require calculation or symbolic reasoning rather than web retrieval. For this reason, the math competition was separated into `Math_Competition.ipynb`, where DeepSeek and Qwen were tested with timed reasoning, wrap-up prompts, forced answer extraction, and Qwen calculator-tool ablations.
 
 ### Speech Adds Noise
 
@@ -359,6 +394,7 @@ Recommended order:
 5. Run experiment clusters.
 6. Review summaries.
 7. Run the final selected competition pipeline.
+8. For the math competition, run `Math_Competition.ipynb` separately and review its ablation summaries.
 
 ---
 
@@ -376,8 +412,10 @@ Recommended order:
 - SerpAPI / Google Search benchmarking
 - Whisper speech transcription
 - Qwen2.5 local LLMs
+- DeepSeek-R1-Distill-Qwen local reasoning model
 - FLAN-T5 baseline
 - Mistral-7B-Instruct experiments
+- SymPy and SciPy for math-tool experiments
 - Pandas for experiment logging and analysis
 
 ---
