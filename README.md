@@ -455,5 +455,5 @@ Add group member names and emails here:
 The video link :
 
 ```text
-Video link: <insert link>
+Video link: <https://drive.google.com/file/d/1H5KiLjbbTr81EVnvX5zb6YDmcbPcM1vs/view?usp=sharing>
 ```
